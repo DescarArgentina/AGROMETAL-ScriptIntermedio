@@ -1,0 +1,168 @@
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.exe
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.deps.json
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.runtimeconfig.json
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.pdb
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\EPPlus.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\EPPlus.Interfaces.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\EPPlus.System.Drawing.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\ExcelDataReader.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Configuration.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Configuration.FileExtensions.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Configuration.Json.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.FileProviders.Abstractions.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.FileProviders.Physical.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.FileSystemGlobbing.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\Microsoft.IO.RecyclableMemoryStream.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\System.Data.SqlClient.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\System.Drawing.Common.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\runtimes\win-arm64\native\sni.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\runtimes\win-x64\native\sni.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\runtimes\win-x86\native\sni.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.csproj.AssemblyReference.cache
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.GeneratedMSBuildEditorConfig.editorconfig
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.AssemblyInfoInputs.cache
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.AssemblyInfo.cs
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.csproj.CoreCompileInputs.cache
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.csproj.CopyComplete
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\obj\Debug\net6.0\refint\DescarConector_Bop.dll
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.pdb
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.genruntimeconfig.cache
+C:\TomG\Crucianelli\crucianelli prueba 4\PruebaArbol\obj\Debug\net6.0\ref\DescarConector_Bop.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.exe
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.deps.json
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.runtimeconfig.json
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.pdb
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\EPPlus.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\EPPlus.Interfaces.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\EPPlus.System.Drawing.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\ExcelDataReader.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Configuration.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Configuration.FileExtensions.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Configuration.Json.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.FileProviders.Abstractions.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.FileProviders.Physical.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.FileSystemGlobbing.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.IO.RecyclableMemoryStream.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\System.Data.SqlClient.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\System.Drawing.Common.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\win-arm64\native\sni.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\win-x64\native\sni.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\win-x86\native\sni.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.csproj.AssemblyReference.cache
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.GeneratedMSBuildEditorConfig.editorconfig
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.AssemblyInfoInputs.cache
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.AssemblyInfo.cs
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.csproj.CoreCompileInputs.cache
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.csproj.CopyComplete
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\refint\DescarConector_Bop.dll
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.pdb
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.genruntimeconfig.cache
+C:\TomG\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\ref\DescarConector_Bop.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.exe
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.deps.json
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.runtimeconfig.json
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.pdb
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\EPPlus.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\EPPlus.Interfaces.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\EPPlus.System.Drawing.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\ExcelDataReader.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Configuration.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Configuration.Abstractions.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Configuration.FileExtensions.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Configuration.Json.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.FileProviders.Abstractions.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.FileProviders.Physical.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.FileSystemGlobbing.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.IO.RecyclableMemoryStream.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\System.Data.SqlClient.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\System.Drawing.Common.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\win-arm64\native\sni.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\win-x64\native\sni.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\win-x86\native\sni.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.csproj.AssemblyReference.cache
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.GeneratedMSBuildEditorConfig.editorconfig
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.AssemblyInfoInputs.cache
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.AssemblyInfo.cs
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.csproj.CoreCompileInputs.cache
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.csproj.CopyComplete
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\refint\DescarConector_Bop.dll
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.pdb
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.genruntimeconfig.cache
+E:\a\Tomi Gg\Crucianelli\Conector Bop\PruebaArbol\obj\Debug\net6.0\ref\DescarConector_Bop.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.exe
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.deps.json
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.runtimeconfig.json
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\DescarConector_Bop.pdb
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\EPPlus.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\EPPlus.Interfaces.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\EPPlus.System.Drawing.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\ExcelDataReader.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Configuration.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Configuration.Abstractions.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Configuration.FileExtensions.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Configuration.Json.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.FileProviders.Abstractions.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.FileProviders.Physical.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.FileSystemGlobbing.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\Microsoft.IO.RecyclableMemoryStream.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\System.Data.SqlClient.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\System.Drawing.Common.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\runtimes\win-arm64\native\sni.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\runtimes\win-x64\native\sni.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\runtimes\win-x86\native\sni.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.csproj.AssemblyReference.cache
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.GeneratedMSBuildEditorConfig.editorconfig
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.AssemblyInfoInputs.cache
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.AssemblyInfo.cs
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.csproj.CoreCompileInputs.cache
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\obj\Debug\net6.0\DescarCo.ADD78F94.Up2Date
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\obj\Debug\net6.0\refint\DescarConector_Bop.dll
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.pdb
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\obj\Debug\net6.0\DescarConector_Bop.genruntimeconfig.cache
+E:\Proyectos\Agrometal\Conector\Script Intermedio\PruebaArbol\obj\Debug\net6.0\ref\DescarConector_Bop.dll
