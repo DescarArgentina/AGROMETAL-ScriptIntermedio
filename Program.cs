@@ -18,7 +18,7 @@ namespace crucia
     {
         public static void EscribirEnLog(string mensaje)
         {
-            // La ruta del log sigue hardcodeada, típicamente se deja así o se saca de un archivo de configuración.
+            // La ruta del log sigue hardcodeada (revisar)
             string rutaLog = "E:\\DescarConector\\Intermedio_log.txt";
 
             try
@@ -107,22 +107,39 @@ namespace crucia
             List<string> exportCommands = new List<string>();
 
 
-            //// Iterar sobre todos los elementos Product y generar comandos
-            foreach (XElement productElement in xdoc.Descendants("{http://www.plmxml.org/Schemas/PLMXMLSchema}Product"))
+
+            // 1. Obtener todos los elementos Product (incluyendo el raíz de la MBOM)
+            var allProductElements = xdoc.Descendants("{http://www.plmxml.org/Schemas/PLMXMLSchema}Product");
+
+            // 2. Usar un HashSet para garantizar la unicidad y evitar procesar duplicados
+            var uniqueProductsToExport = new HashSet<(string productId, string subType)>();
+
+            foreach (XElement productElement in allProductElements)
             {
                 string productId = productElement.Attribute("productId")?.Value;
                 string subtype = productElement.Attribute("subType")?.Value;
+
+                if (!string.IsNullOrEmpty(productId))
+                {
+                    uniqueProductsToExport.Add((productId, subtype));
+                }
+            }
+
+            // 3. Generar los comandos de exportación a partir de los items únicos
+            foreach (var productInfo in uniqueProductsToExport)
+            {
+                string productId = productInfo.productId;
+                string subtype = productInfo.subType;
                 string itemToExport = "";
 
-                if (string.IsNullOrEmpty(productId)) continue;
-
+                // Aplicar la lógica de transformación del ID
                 if (subtype == "Agm4_Pieza")
                 {
                     itemToExport = "P-" + productId;
                 }
                 else if (subtype == "Agm4_SubCon")
                 {
-                    if (productId.Contains('E'))
+                    if (productId.StartsWith('E'))
                     {
                         itemToExport = "P-" + productId.Substring(1);
                     }
@@ -140,7 +157,9 @@ namespace crucia
                 }
             }
 
-            // 2. DISTRIBUCIÓN EQUITATIVA Y GENERACIÓN DE MÚLTIPLES BATCH FILES
+            Utilidades.EscribirEnLog($"Se encontraron {uniqueProductsToExport.Count} ítems únicos (incluyendo el padre) para exportar.");
+
+
             Utilidades.EscribirEnLog($"Se generaron {exportCommands.Count} comandos de exportación para distribuir en {NUM_BATCH_FILES} archivos.");
 
             List<Process> runningProcesses = new List<Process>();
@@ -203,32 +222,14 @@ namespace crucia
 
 
         // --------------------------------------------- Metodos no utilizados por el Main() (Carga en Base de datos de BOP) ---------------------------------------------
-        static void BorrarTabla(SqlConnection connection, Dictionary<string, List<DataRow>> groupedDataRows)
-        {
-            foreach (var group in groupedDataRows)
-            {
-                try
-                {
-                    string tableName = group.Key;
-                    string deleteTableQuery = $"IF OBJECT_ID('[{tableName}]', 'U') IS NOT NULL DROP TABLE [{tableName}]";
-                    using (SqlCommand command = new SqlCommand(deleteTableQuery, connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
-                }
-                catch (Exception ea)
-                {
-                    Utilidades.EscribirEnLog($"Error al intentar borrar la tabla para su sobreescritura - Error: {ea.Message}");
-                }
-            }
-        }
+
 
         static bool ParseNode(XmlNode node, Dictionary<string, List<DataRow>> groupedDataRows, string parentNodeName = "")
         {
             // Crear una lista de nombres de nodos a ignorar
             var listaIgnorados = new List<string> { "ApplicationRef", "AssociatedDataSet", "AttributeContext", "DataSet",
-                                                        "ExternalFile", "Folder", "InstanceGraph", "ProductDef", "ProductInstance",
-                                                        "ProductRevisionView", "RevisionRule", "Site", "Transform", "View" };
+                                                     "ExternalFile", "Folder", "InstanceGraph", "ProductDef", "ProductInstance",
+                                                     "ProductRevisionView", "RevisionRule", "Site", "Transform", "View" };
             try
             {
                 if (node.NodeType == XmlNodeType.Element && !listaIgnorados.Contains(node.Name))
@@ -282,181 +283,11 @@ namespace crucia
             return tableName;
         }
 
-        static void CreateTable(SqlConnection connection, Dictionary<string, List<DataRow>> groupedDataRows)
-        {
-            foreach (var group in groupedDataRows)
-            {
-                string tableName = group.Key;
-                if (tableName == "PLMXML")
-                {
-                    continue;
-                }
-                string createTableQuery = $"IF OBJECT_ID('[{tableName}]', 'U') IS NOT NULL DROP TABLE [{tableName}]; CREATE TABLE [{tableName}] (id INT IDENTITY(1,1) PRIMARY KEY, contenido NVARCHAR(MAX)";
-                List<string> additionalAttributes = new List<string>();
-                bool hasIdAttribute = false;
-
-                foreach (DataRow dataRow in group.Value)
-                {
-                    foreach (string attribute in dataRow.Atributos)
-                    {
-                        if (!additionalAttributes.Contains(attribute) && attribute != "id")
-                        {
-                            additionalAttributes.Add(attribute);
-                        }
-                        if (attribute == "id")
-                        {
-                            hasIdAttribute = true;
-                        }
-                    }
-                }
-                if (hasIdAttribute)
-                {
-                    createTableQuery += ", id_Table INT";
-                }
-                else
-                {
-                    createTableQuery += ", id_Father INT";
-                }
-                foreach (string columnName in additionalAttributes)
-                {
-                    if (columnName != "id")
-                    {
-                        createTableQuery += $", [{columnName}] NVARCHAR(MAX)";
-                    }
-                }
-                createTableQuery += ");";
-                using (SqlCommand command = new SqlCommand(createTableQuery, connection))
-                {
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
-
-        static void AlterTable(SqlConnection connection, string tableName, string columnName, string columnType)
-        {
-            try
-            {
-                string alterTableQuery = $"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{tableName}' AND COLUMN_NAME = '{columnName}') " +
-                $"ALTER TABLE [{tableName}] ADD [{columnName}] {columnType};";
-
-                using (SqlCommand command = new SqlCommand(alterTableQuery, connection))
-                {
-                    command.ExecuteNonQuery();
-                }
-            }
-            catch (Exception ea)
-            {
-                Utilidades.EscribirEnLog($"Excepcion controlada en el metodo AlterTable: {ea.Message}");
-                throw;
-            }
-
-        }
-
-        static void InsertData(SqlConnection connection, Dictionary<string, List<DataRow>> groupedDataRows, string xml, int contadorXmls)
-        {
-            try
-            {
-                foreach (var group in groupedDataRows)
-                {
-                    string tableName = group.Key;
-
-                    foreach (DataRow dataRow in group.Value)
-                    {
-                        if (dataRow.NombreNodo == "PLMXML")
-                            continue;
-                        string insertQuery = $"INSERT INTO [{tableName}] (";
-                        List<string> columnNames = new List<string>();
-                        List<string> parameterNames = new List<string>();
-                        List<SqlParameter> parameters = new List<SqlParameter>();
-                        bool hasIdAttribute = false;
 
 
-                        foreach (string columnName in dataRow.Atributos)
-                        {
 
-                            if (columnName == "id" || columnName == "instancedRef" || columnName == "masterRef" || columnName == "parentRef" || columnName == "instanceRefs")
-                            {
-                                string attributeValue1 = dataRow.XmlNode.Attributes[columnName]?.Value;
-
-                                if (columnName == "id" && !string.IsNullOrEmpty(attributeValue1) && attributeValue1.Length > 2)
-                                {
-                                    hasIdAttribute = true;
-                                    columnNames.Add("[id_Table]");
-                                    parameterNames.Add("@id");
-                                    attributeValue1 = attributeValue1.Substring(2);
-                                    parameters.Add(new SqlParameter("@id", attributeValue1));
-                                }
-                                if (columnName == "instancedRef" && !string.IsNullOrEmpty(attributeValue1) && attributeValue1.Length > 2)
-                                {
-                                    columnNames.Add("[instancedRef]");
-                                    parameterNames.Add("@instancedRef");
-                                    attributeValue1 = attributeValue1.Substring(3);
-                                    parameters.Add(new SqlParameter("@instancedRef", attributeValue1));
-                                }
-                                if (columnName == "masterRef" && !string.IsNullOrEmpty(attributeValue1) && attributeValue1.Length > 2)
-                                {
-                                    columnNames.Add("[masterRef]");
-                                    parameterNames.Add("@masterRef");
-                                    attributeValue1 = attributeValue1.Substring(3);
-                                    parameters.Add(new SqlParameter("@masterRef", attributeValue1));
-                                }
-                                if (columnName == "parentRef" && !string.IsNullOrEmpty(attributeValue1) && attributeValue1.Length > 2)
-                                {
-                                    columnNames.Add("[parentRef]");
-                                    parameterNames.Add("@parentRef");
-                                    attributeValue1 = attributeValue1.Substring(3);
-                                    parameters.Add(new SqlParameter("@parentRef", attributeValue1));
-                                }
-                                if (columnName == "instanceRefs" && !string.IsNullOrEmpty(attributeValue1) && attributeValue1.Length > 2)
-                                {
-                                    columnNames.Add("[instanceRefs]");
-                                    parameterNames.Add("@instanceRefs");
-                                    attributeValue1 = attributeValue1.Substring(3);
-                                    parameters.Add(new SqlParameter("@instanceRefs", attributeValue1));
-                                }
-                                continue;
-                            }
-                            AlterTable(connection, tableName, columnName, "NVARCHAR(MAX)");
-                            columnNames.Add($"[{columnName}]");
-                            parameterNames.Add($"@{columnName}");
-                            string attributeValue = dataRow.XmlNode.Attributes[columnName]?.Value;
-                            attributeValue = attributeValue.Replace("'", "''");
-                            parameters.Add(new SqlParameter($"@{columnName}", attributeValue));
-
-                        }
-                        columnNames.Add("[contenido]");
-                        parameterNames.Add("@contenido");
-                        parameters.Add(new SqlParameter("@contenido", dataRow.XmlNode.InnerText));
-
-                        if (!hasIdAttribute)
-                        {
-                            columnNames.Add("[id_Father]");
-                            parameterNames.Add("@idFather");
-                            XmlNode parentNode = dataRow.XmlNode.ParentNode;
-                            string parentAttributeValue = parentNode?.Attributes["id"]?.Value;
-                            string parentAttributeId = parentAttributeValue?.Substring(2) ?? "0";
-                            parameters.Add(new SqlParameter("@idFather", parentAttributeId));
-                        }
-                        columnNames.Add("[idXml]");
-                        parameterNames.Add("@idXml");
-                        parameters.Add(new SqlParameter("@idXml", contadorXmls));
-
-                        insertQuery += string.Join(", ", columnNames) + ") VALUES (";
-                        insertQuery += string.Join(", ", parameterNames) + ");";
-
-                        using (SqlCommand command = new SqlCommand(insertQuery, connection))
-                        {
-                            command.Parameters.AddRange(parameters.ToArray());
-                            command.ExecuteNonQuery();
-                        }
-                    }
-                }
-            }
-            catch (Exception ea)
-            {
-                Utilidades.EscribirEnLog($"Excepcion controlada en el metodo InsertData {ea.Message}");
-            }
-
-        }
+        
     }
+
+
 }
