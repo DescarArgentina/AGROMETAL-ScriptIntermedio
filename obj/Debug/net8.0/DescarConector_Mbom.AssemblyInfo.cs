@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DescarConector_Mbom")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+218b749f3c6385cab1e06fdf74fd0102694077bd")]
 [assembly: System.Reflection.AssemblyProductAttribute("DescarConector_Mbom")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DescarConector_Mbom")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
