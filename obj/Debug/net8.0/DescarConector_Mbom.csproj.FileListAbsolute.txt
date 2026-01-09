@@ -121,3 +121,4 @@ C:\DescarConector\SCRIPT_INTERMEDIO\Script Intermedio\PruebaArbol\obj\Debug\net8
 C:\DescarConector\SCRIPT_INTERMEDIO\Script Intermedio\PruebaArbol\obj\Debug\net8.0\DescarConector_Mbom.pdb
 C:\DescarConector\SCRIPT_INTERMEDIO\Script Intermedio\PruebaArbol\obj\Debug\net8.0\DescarConector_Mbom.genruntimeconfig.cache
 C:\DescarConector\SCRIPT_INTERMEDIO\Script Intermedio\PruebaArbol\obj\Debug\net8.0\ref\DescarConector_Mbom.dll
+C:\DescarConector\SCRIPT_INTERMEDIO\Script Intermedio\PruebaArbol\obj\Debug\net8.0\DescarConector_Mbom.sourcelink.json
