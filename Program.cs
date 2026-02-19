@@ -10,6 +10,9 @@ using System.Xml.Linq;
 using System.Xml;
 using DataRow = PruebaArbol.DataRow;
 using System.IO;
+using System.Globalization;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Linq;
 
 namespace crucia
@@ -24,6 +27,74 @@ namespace crucia
         // Cache diario
         private static string _rutaLogActual = null;
         private static string _fechaCache = null; // "dd_MM_yy"
+        public static string SanitizarNombreParaRuta(string input, int maxLen = 80)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return "SIN_NOMBRE";
+
+            // 1) Quitar diacríticos (Ñ -> N, á -> a, etc.)
+            string normalized = input.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder(normalized.Length);
+
+            foreach (char c in normalized)
+            {
+                var cat = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (cat != UnicodeCategory.NonSpacingMark)
+                    sb.Append(c);
+            }
+
+            string sinDiacriticos = sb.ToString().Normalize(NormalizationForm.FormC);
+
+            // 2) Por las dudas, normalizar ñ/Ñ explícitamente también
+            sinDiacriticos = sinDiacriticos.Replace('ñ', 'n').Replace('Ñ', 'N');
+
+            // 3) Reemplazar caracteres inválidos para nombre de carpeta/archivo
+            string safe = sinDiacriticos;
+            foreach (char invalid in Path.GetInvalidFileNameChars())
+                safe = safe.Replace(invalid, '_');
+
+            // 4) Compactar espacios y limpiar extremos raros
+            safe = Regex.Replace(safe, @"\s+", "_").Trim(' ', '.', '_');
+
+            if (string.IsNullOrWhiteSpace(safe))
+                safe = "SIN_NOMBRE";
+
+            if (safe.Length > maxLen)
+                safe = safe.Substring(0, maxLen);
+
+            return safe;
+        }
+
+        /// <summary>
+        /// Sanitiza SOLO el último segmento de la ruta (la carpeta final).
+        /// Ej: E:\...\CAÑO1\  => E:\...\CANO1\
+        /// </summary>
+        public static string SanitizarUltimaCarpetaDeRuta(string ruta)
+        {
+            if (string.IsNullOrWhiteSpace(ruta))
+                return ruta;
+
+            char sep = Path.DirectorySeparatorChar;
+
+            string original = ruta;
+            string trimmed = ruta.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+            string? parent = Path.GetDirectoryName(trimmed);
+            string leaf = Path.GetFileName(trimmed);
+
+            // Si no hay "parent" (casos raros), no tocamos
+            if (string.IsNullOrWhiteSpace(parent) || string.IsNullOrWhiteSpace(leaf))
+                return original.EndsWith(sep.ToString()) ? original : (original + sep);
+
+            string leafSan = SanitizarNombreParaRuta(leaf);
+
+            string nueva = Path.Combine(parent, leafSan) + sep;
+
+            if (!string.Equals(original, nueva, StringComparison.OrdinalIgnoreCase))
+                EscribirEnLog($"Sanitización de ruta de salida: '{original}' => '{nueva}'");
+
+            return nueva;
+        }
 
         private static string ObtenerRutaLogDelDia()
         {
@@ -102,7 +173,10 @@ namespace crucia
             // Argumento 2: Ruta de la carpeta de salida de los XMLs (AllXmls)
             string allXmlsPath = args[1];
 
-            // Aseguramos que la ruta de carpeta termine con un separador
+            // Sanitiza la carpeta final (por ej. "CAÑO1" -> "CANO1")
+            allXmlsPath = Utilidades.SanitizarUltimaCarpetaDeRuta(allXmlsPath);
+
+            // Aseguramos separador al final (por si vino sin \)
             if (!allXmlsPath.EndsWith(Path.DirectorySeparatorChar.ToString()))
             {
                 allXmlsPath += Path.DirectorySeparatorChar;
@@ -274,31 +348,41 @@ namespace crucia
 
             if (string.Equals(subType, "Agm4_Pieza", StringComparison.OrdinalIgnoreCase))
             {
+                if (string.IsNullOrWhiteSpace(productId))
+                    return "";
+
                 itemToExport = "P-" + productId;
             }
             else if (string.Equals(subType, "Agm4_SubCon", StringComparison.OrdinalIgnoreCase))
             {
-                if (!string.IsNullOrEmpty(productId) && productId.StartsWith("E", StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrWhiteSpace(productId))
+                    return "";
+
+                if (productId.StartsWith("E", StringComparison.OrdinalIgnoreCase))
                     itemToExport = "P-" + productId.Substring(1);
                 else
                     itemToExport = "P-" + productId;
             }
-            else if (string.Equals(subType, "Agm4_sub_mBOM_E", StringComparison.OrdinalIgnoreCase))
+            else if (string.Equals(subType, "Agm4_sub_mBOM_E", StringComparison.OrdinalIgnoreCase) ||
+                     string.Equals(subType, "Agm4_sub_mBOM_S", StringComparison.OrdinalIgnoreCase) ||
+                     string.Equals(subType, "Agm4_conj_mBOM_F", StringComparison.OrdinalIgnoreCase)
+                     )
             {
-                if (!string.IsNullOrEmpty(productId) && productId.StartsWith("M", StringComparison.OrdinalIgnoreCase))
-                    itemToExport = "P-" + productId.Substring(2);
-                else
-                    itemToExport = "P-" + productId;
-            }
-            else if (string.Equals(subType, "Agm4_sub_mBOM_S", StringComparison.OrdinalIgnoreCase))
-            {
-                if (!string.IsNullOrEmpty(productId) && productId.StartsWith("M", StringComparison.OrdinalIgnoreCase))
-                    itemToExport = "P-" + productId.Substring(2);
-                else
-                    itemToExport = "P-" + productId;
+                if (string.IsNullOrWhiteSpace(productId))
+                    return "";
+
+                string id = productId;
+
+                if (id.StartsWith("M-", StringComparison.OrdinalIgnoreCase))
+                    id = id.Substring(2);
+                else if (id.StartsWith("M", StringComparison.OrdinalIgnoreCase))
+                    id = id.Substring(1);
+
+                itemToExport = "P-" + id;
             }
 
             return itemToExport;
         }
+
     }
 }
