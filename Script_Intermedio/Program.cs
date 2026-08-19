@@ -143,6 +143,46 @@ namespace crucia
                 Utilidades.EscribirEnLog($"Error al limpiar o crear la carpeta de salida {rutaCarpeta}: {ex.Message}");
             }
         }
+
+        // Con -transfermode=ConfiguredDataFilesExportDefault_P, Teamcenter crea junto a cada
+        // "{item}.xml" una carpeta "{item}\" con TODOS los archivos adjuntos exportados
+        // (planos, .prt, .jt, qafmetadata*.qaf, etc.). La imagen real de la pieza es el/los
+        // "images_preview*.qaf" (son JPEG con otra extensión) - el resto no nos sirve y lo
+        // descartamos, así el Web Service solo encuentra ahí lo que necesita.
+        public static void LimpiarAdjuntosNoJpg(string allXmlsPath)
+        {
+            if (!Directory.Exists(allXmlsPath))
+                return;
+
+            foreach (string carpetaItem in Directory.GetDirectories(allXmlsPath))
+            {
+                try
+                {
+                    foreach (string archivo in Directory.GetFiles(carpetaItem, "*", SearchOption.AllDirectories))
+                    {
+                        string nombre = Path.GetFileName(archivo);
+                        bool esImagenPreview = nombre.IndexOf("images_preview", StringComparison.OrdinalIgnoreCase) >= 0;
+
+                        if (!esImagenPreview)
+                        {
+                            File.Delete(archivo);
+                        }
+                    }
+
+                    // Limpiar subcarpetas que hayan quedado vacías tras el borrado de arriba
+                    foreach (string subcarpeta in Directory.GetDirectories(carpetaItem, "*", SearchOption.AllDirectories)
+                                 .OrderByDescending(d => d.Length))
+                    {
+                        if (!Directory.EnumerateFileSystemEntries(subcarpeta).Any())
+                            Directory.Delete(subcarpeta);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    EscribirEnLog($"Error al limpiar adjuntos no-images_preview en {carpetaItem}: {ex.Message}");
+                }
+            }
+        }
     }
 
     class Program
@@ -182,13 +222,14 @@ namespace crucia
             public string MotivoCancelacion;
         }
 
-        private static void MonitorearYAplicarLimites(List<ProcessContext> contexts)
+        private static void MonitorearYAplicarLimites(List<ProcessContext> contexts, bool aplicarLimiteMemoria = true)
         {
             if (contexts == null || contexts.Count == 0)
                 return;
 
             int activos = contexts.Count;
-            Utilidades.EscribirEnLog($"Monitoreo iniciado. Procesos activos: {activos}. Límites: Total={TIMEOUT_MAX_EJECUCION}, SinSalida={TIMEOUT_SIN_SALIDA}, Mem={FormatearBytes(LIMITE_MEMORIA_BYTES)}");
+            string memInfo = aplicarLimiteMemoria ? FormatearBytes(LIMITE_MEMORIA_BYTES) : "SIN LÍMITE";
+            Utilidades.EscribirEnLog($"Monitoreo iniciado. Procesos activos: {activos}. Límites: Total={TIMEOUT_MAX_EJECUCION}, SinSalida={TIMEOUT_SIN_SALIDA}, Mem={memInfo}");
 
             while (activos > 0)
             {
@@ -222,7 +263,7 @@ namespace crucia
                     if (!ctx.CancelSolicitado && runTicks > TIMEOUT_MAX_EJECUCION.Ticks)
                     {
                         ctx.CancelSolicitado = true;
-                        ctx.MotivoCancelacion = "TIMEOUT_MAX_EJECUCUCION";
+                        ctx.MotivoCancelacion = "TIMEOUT_MAX_EJECUCION";
                         Utilidades.EscribirEnLog($"[{ctx.BatFileName}] ERROR: Tiempo máximo excedido (> {TIMEOUT_MAX_EJECUCION}). Se cancela.");
                         TryTerminateJob(ctx);
                         continue;
@@ -239,8 +280,8 @@ namespace crucia
                         continue;
                     }
 
-                    // 3) Límite de memoria (4 GB) por job (árbol completo)
-                    if (!ctx.CancelSolicitado)
+                    // 3) Límite de memoria por job (árbol completo)
+                    if (!ctx.CancelSolicitado && aplicarLimiteMemoria)
                     {
                         long mem = 0;
                         try { mem = ctx.Job.SumPrivateBytes(); } catch { }
@@ -273,6 +314,78 @@ namespace crucia
             catch (Exception ex)
             {
                 Utilidades.EscribirEnLog($"[{ctx.BatFileName}] ERROR al cancelar. Motivo={ctx.MotivoCancelacion}. Ex={ex.Message}");
+            }
+        }
+
+        private static ProcessContext IniciarBat(string batFileName, string rutaBat, string directoryBat, bool aplicarLimiteMemoria = true)
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = Environment.GetEnvironmentVariable("ComSpec") ?? "cmd.exe",
+                Arguments = $"/d /s /c \"\"{rutaBat}\"\"",
+                WorkingDirectory = directoryBat,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            };
+
+            var proceso = new Process { StartInfo = startInfo, EnableRaisingEvents = true };
+
+            var activity = new ActivityTracker
+            {
+                StartTicksUtc = DateTime.UtcNow.Ticks,
+                LastOutputTicksUtc = DateTime.UtcNow.Ticks
+            };
+
+            proceso.OutputDataReceived += (sender, e) =>
+            {
+                if (e.Data != null)
+                {
+                    Interlocked.Exchange(ref activity.LastOutputTicksUtc, DateTime.UtcNow.Ticks);
+                    Utilidades.EscribirEnLog($"[{batFileName}] Salida del proceso: {e.Data}");
+                }
+            };
+
+            proceso.ErrorDataReceived += (sender, e) =>
+            {
+                if (e.Data != null)
+                {
+                    Interlocked.Exchange(ref activity.LastOutputTicksUtc, DateTime.UtcNow.Ticks);
+                    Utilidades.EscribirEnLog($"[{batFileName}] ERROR(stderr): {e.Data}");
+                }
+            };
+
+            try
+            {
+                proceso.Start();
+                proceso.BeginOutputReadLine();
+                proceso.BeginErrorReadLine();
+
+                var job = new JobObject($"Intermedio_{batFileName}_{proceso.Id}");
+                if (aplicarLimiteMemoria)
+                    job.SetJobMemoryLimit(LIMITE_MEMORIA_BYTES);
+                job.Assign(proceso);
+
+                return new ProcessContext
+                {
+                    BatFileName = batFileName,
+                    Proceso = proceso,
+                    Job = job,
+                    Activity = activity
+                };
+            }
+            catch (Win32Exception ex)
+            {
+                Utilidades.EscribirEnLog($"[{batFileName}] ERROR al iniciar/configurar el proceso: {ex.Message} | NativeErrorCode={ex.NativeErrorCode}");
+                try { proceso.Kill(true); } catch { }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Utilidades.EscribirEnLog($"[{batFileName}] ERROR al iniciar/configurar el proceso: {ex.Message}");
+                try { proceso.Kill(true); } catch { }
+                return null;
             }
         }
 
@@ -325,7 +438,7 @@ namespace crucia
             // Rutas base (HARDCODEADAS por ser configuración de Teamcenter y BAT)
             string directoryBat = "E:\\DescarConector";
             string baseBatName = "script_export_";
-            const int NUM_BATCH_FILES = 10; // Número de archivos .bat para paralelización
+            const int NUM_BATCH_NORMALES = 9;
 
             // Crear un objeto XDocument y cargar el contenido desde el archivo
             XDocument xdoc = XDocument.Load(archivo);
@@ -338,18 +451,14 @@ namespace crucia
             // Limpiar la carpeta de destino de los XMLs antes de empezar la exportación
             Utilidades.LimpiarCarpeta(allXmlsPath);
 
-            // Lista para almacenar todos los comandos de exportación generados
-            List<string> exportCommands = new List<string>();
-
-            // ====================================================================================================================
-            // === CÓDIGO CORREGIDO: Recolectar Items únicos (incluyendo el raíz) para garantizar la exportación del padre.
-            // ====================================================================================================================
-
             // 1) Construir diccionario productId -> subType
             Dictionary<string, string> productos = ConstruirDiccionarioProductos(xdoc);
             Utilidades.EscribirEnLog($"Se encontraron {productos.Count} Product únicos (productId) en el XML.");
 
-            // 2) Generar los comandos de exportación iterando el diccionario y aplicando sanitización actual
+            // 2) Separar comandos: pesados (Agm4_sub_mBOM_E, corren solos al final) vs normales (paralelos)
+            var comandosNormales = new List<string>();
+            var comandosPesados = new List<string>();
+
             foreach (var kv in productos)
             {
                 string productId = kv.Key;
@@ -364,113 +473,95 @@ namespace crucia
                 {
                     string command =
                         $"\r\nplmxml_export -u=lacuna -p=lacuna -g=Proceso -item={itemToExport} " +
-                        "-rev_rule=\"Latest Working\" -export_bom=yes -transfermode=ConfiguredDataExportDefault " +
+                        "-rev_rule=\"Latest Working\" -export_bom=yes -transfermode=ConfiguredDataFilesExportDefault_P " +
                         $" -xml_file=\"{allXmlsPath}{itemToExport}.xml\"";
 
-                    exportCommands.Add(command);
+                    if (string.Equals(subType, "Agm4_sub_mBOM_E", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(subType, "Agm4_sub_mBOM_S", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(subType, "Agm4_conj_mBOM_F", StringComparison.OrdinalIgnoreCase))
+                        comandosPesados.Add(command);
+                    else
+                        comandosNormales.Add(command);
                 }
             }
 
-            Utilidades.EscribirEnLog($"Se generaron {exportCommands.Count} comandos de exportación a partir del diccionario.");
+            Utilidades.EscribirEnLog($"Comandos normales: {comandosNormales.Count}. Comandos pesados (Agm4_sub_mBOM_E): {comandosPesados.Count}.");
 
-            // ====================================================================================================================
-            // === FIN DEL CÓDIGO CORREGIDO
-            // ====================================================================================================================
+            // FASE 1: Distribuir comandos normales en 9 bats y correr en paralelo
+            Utilidades.EscribirEnLog($"Fase 1: distribuyendo {comandosNormales.Count} comandos normales en {NUM_BATCH_NORMALES} archivos paralelos.");
 
-            // 2. DISTRIBUCIÓN EQUITATIVA Y GENERACIÓN DE MÚLTIPLES BATCH FILES
-            Utilidades.EscribirEnLog($"Se generaron {exportCommands.Count} comandos de exportación para distribuir en {NUM_BATCH_FILES} archivos.");
+            var procesosNormales = new List<ProcessContext>();
 
-            List<ProcessContext> runningProcesses = new List<ProcessContext>();
-
-            for (int i = 0; i < NUM_BATCH_FILES; i++)
+            for (int i = 0; i < NUM_BATCH_NORMALES; i++)
             {
-                string batFileName = $"{baseBatName}{i + 1}.bat";
-                string rutaBat = Path.Combine(directoryBat, batFileName);
                 string contenidoBat = tcConfigContent;
+                bool tieneComandos = false;
 
-                // Distribución equitativa: Asignar al bat 'i' los comandos 'i', 'i+N', 'i+2N', etc.
-                for (int j = i; j < exportCommands.Count; j += NUM_BATCH_FILES)
+                for (int j = i; j < comandosNormales.Count; j += NUM_BATCH_NORMALES)
                 {
-                    contenidoBat += exportCommands[j];
+                    contenidoBat += comandosNormales[j];
+                    tieneComandos = true;
                 }
+
+                if (!tieneComandos)
+                    continue;
 
                 contenidoBat += "\nexit";
 
-                // Escribir el contenido en el nuevo archivo .bat
+                string batFileName = $"{baseBatName}{i + 1}.bat";
+                string rutaBat = Path.Combine(directoryBat, batFileName);
                 File.WriteAllText(rutaBat, contenidoBat);
-                Utilidades.EscribirEnLog($"Archivo {batFileName} creado. Comandos asignados: {exportCommands.Count / NUM_BATCH_FILES + (i < exportCommands.Count % NUM_BATCH_FILES ? 1 : 0)}");
 
-                // 3. EJECUCIÓN PARALELA DE CADA BATCH FILE (con límites de tiempo y memoria)
-                var ProcesosStarInfo = new ProcessStartInfo();
-                ProcesosStarInfo.FileName = Environment.GetEnvironmentVariable("ComSpec") ?? "cmd.exe";
-                ProcesosStarInfo.Arguments = $"/d /s /c \"\"{rutaBat}\"\"";
-                ProcesosStarInfo.WorkingDirectory = directoryBat;
-                ProcesosStarInfo.UseShellExecute = false;
-                ProcesosStarInfo.RedirectStandardOutput = true;
-                ProcesosStarInfo.RedirectStandardError = true;
-                ProcesosStarInfo.CreateNoWindow = true;
+                int count = comandosNormales.Count / NUM_BATCH_NORMALES + (i < comandosNormales.Count % NUM_BATCH_NORMALES ? 1 : 0);
+                Utilidades.EscribirEnLog($"Archivo {batFileName} creado. Comandos asignados: {count}");
 
-                var proceso = new Process();
-                proceso.StartInfo = ProcesosStarInfo;
-                proceso.EnableRaisingEvents = true;
+                var ctx = IniciarBat(batFileName, rutaBat, directoryBat);
+                if (ctx != null)
+                    procesosNormales.Add(ctx);
+            }
 
-                var activity = new ActivityTracker();
-                activity.StartTicksUtc = DateTime.UtcNow.Ticks;
-                activity.LastOutputTicksUtc = activity.StartTicksUtc;
+            MonitorearYAplicarLimites(procesosNormales);
+            Utilidades.EscribirEnLog("Fase 1 finalizada. Todos los procesos normales han terminado.");
 
-                // Manejo de la salida (cada proceso tendrá su log)
-                proceso.OutputDataReceived += (sender, e) =>
+            // FASE 2: Correr cada comando pesado solo, con el sistema libre
+            if (comandosPesados.Count == 0)
+            {
+                Utilidades.EscribirEnLog("No hay comandos pesados (Agm4_sub_mBOM_E). Nada que hacer en Fase 2.");
+            }
+            else
+            {
+                Utilidades.EscribirEnLog($"Fase 2: ejecutando {comandosPesados.Count} comando(s) pesado(s) de forma secuencial.");
+
+                for (int i = 0; i < comandosPesados.Count; i++)
                 {
-                    if (e.Data != null)
+                    string batFileName = $"script_export_pesado_{i + 1}.bat";
+                    string rutaBat = Path.Combine(directoryBat, batFileName);
+                    string contenidoBat = tcConfigContent + comandosPesados[i] + "\nexit";
+
+                    File.WriteAllText(rutaBat, contenidoBat);
+                    Utilidades.EscribirEnLog($"[Pesado {i + 1}/{comandosPesados.Count}] Archivo {batFileName} creado. Iniciando...");
+
+                    var ctx = IniciarBat(batFileName, rutaBat, directoryBat, aplicarLimiteMemoria: false);
+                    if (ctx != null)
                     {
-                        Interlocked.Exchange(ref activity.LastOutputTicksUtc, DateTime.UtcNow.Ticks);
-                        Utilidades.EscribirEnLog($"[{batFileName}] Salida del proceso: {e.Data}");
+                        MonitorearYAplicarLimites(new List<ProcessContext> { ctx }, aplicarLimiteMemoria: false);
+                        int exitCode = 0;
+                        try { exitCode = ctx.Proceso.ExitCode; } catch { }
+                        if (exitCode != 0)
+                            Utilidades.EscribirEnLog($"[Pesado {i + 1}/{comandosPesados.Count}] ERROR: Finalizó con ExitCode={exitCode}.");
+                        else
+                            Utilidades.EscribirEnLog($"[Pesado {i + 1}/{comandosPesados.Count}] Finalizado OK.");
                     }
-                };
-
-                proceso.ErrorDataReceived += (sender, e) =>
-                {
-                    if (e.Data != null)
-                    {
-                        Interlocked.Exchange(ref activity.LastOutputTicksUtc, DateTime.UtcNow.Ticks);
-                        Utilidades.EscribirEnLog($"[{batFileName}] ERROR(stderr): {e.Data}");
-                    }
-                };
-
-                try
-                {
-                    proceso.Start();
-                    proceso.BeginOutputReadLine();
-                    proceso.BeginErrorReadLine();
-
-                    var job = new JobObject($"Intermedio_{batFileName}_{proceso.Id}");
-                    job.SetJobMemoryLimit(LIMITE_MEMORIA_BYTES);
-                    job.Assign(proceso);
-
-                    runningProcesses.Add(new ProcessContext
-                    {
-                        BatFileName = batFileName,
-                        Proceso = proceso,
-                        Job = job,
-                        Activity = activity
-                    });
-                }
-                catch (Win32Exception ex)
-                {
-                    Utilidades.EscribirEnLog($"[{batFileName}] ERROR al iniciar/configurar el proceso: {ex.Message} | NativeErrorCode={ex.NativeErrorCode}");
-                    try { proceso.Kill(true); } catch { }
-                }
-                catch (Exception ex)
-                {
-                    Utilidades.EscribirEnLog($"[{batFileName}] ERROR al iniciar/configurar el proceso: {ex.Message}");
-                    try { proceso.Kill(true); } catch { }
                 }
             }
 
-            // 4. MONITOREAR HASTA QUE TODOS LOS PROCESOS TERMINEN (aplicando límites)
-            MonitorearYAplicarLimites(runningProcesses);
+            Utilidades.EscribirEnLog("Todos los procesos de exportación han finalizado.");
 
-            Utilidades.EscribirEnLog("Todos los procesos de exportación paralelos han finalizado.");
+            // Cada item exportado con ConfiguredDataFilesExportDefault_P trae una carpeta con
+            // todos los archivos adjuntos que Teamcenter haya generado; solo nos interesa el .jpg.
+            Utilidades.EscribirEnLog("Limpiando adjuntos no-.jpg de las carpetas exportadas...");
+            Utilidades.LimpiarAdjuntosNoJpg(allXmlsPath);
+            Utilidades.EscribirEnLog("Limpieza de adjuntos finalizada.");
         }
 
         static Dictionary<string, string> ConstruirDiccionarioProductos(XDocument xdoc)
@@ -516,7 +607,8 @@ namespace crucia
 
                 itemToExport = "P-" + productId;
             }
-            else if (string.Equals(subType, "Agm4_SubCon", StringComparison.OrdinalIgnoreCase))
+            else if (string.Equals(subType, "Agm4_SubCon", StringComparison.OrdinalIgnoreCase) ||
+                     string.Equals(subType, "Agm4_ConGeneral", StringComparison.OrdinalIgnoreCase))
             {
                 if (string.IsNullOrWhiteSpace(productId))
                     return "";
